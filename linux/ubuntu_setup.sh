@@ -136,7 +136,6 @@ sudo apt-key adv --keyserver pgp.mit.edu --recv-keys 5044912E
 #sudo dpkg -i /tmp/Stacer_1.0.4_i386.deb
 
 #Add to FS Tabs
-#//192.168.0.103/share  /media/sheldon/nas/  cifs  username=sheldon,password=Gladiator1,iocharset=utf8,gid=1000,uid=1000,sec=ntlm  0  0
 #sudo mount -a
 
 
