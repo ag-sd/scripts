@@ -152,6 +152,21 @@ sudo dpkg -i ‘/tmp/tmp/download?plat=lnx.x86_64’
 git config --global user.email "sheldon.anitta@gmail.com"
 git config --global user.name "ag-sd"
 
+#Mount the nas
+    #Backup the fstabs file
+    cp /etc/fstab /etc/fstab_backup
+
+    #Add New entry
+    echo Enter Share name:
+    read share
+    echo Enter mount point:
+    read mt_pt
+    echo Enter your NAS username:
+    read username
+    echo Enter your NAS password:
+    read password
+    echo -e "$share\t$mt_pt\tcifs\tusername=$username,password=$password,iocharset=utf8,file_mode=0777,dir_mode=0777,vers=1.0\t0\t0" >> /etc/fstab
+
 # requires clicks
 sudo apt-get install -y --dry-run ubuntu-restricted-extras
 
