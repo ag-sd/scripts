@@ -116,7 +116,7 @@ sudo apt-key adv --keyserver pgp.mit.edu --recv-keys 5044912E
 ##TODO Make this rerunnable
 #sudo apt-get install variety vlc synaptic pinta linux-headers-generic \
 #		p7zip p7zip-full p7zip-rar redshift redshift-gtk gdebi arc-theme xfce4-mount-plugin \
-#		libappindicator1 libindicator7 clementine git gnome-disk-utility cifs-utils
+#		libappindicator1 libindicator7 clementine git gnome-disk-utility cifs-utils wine q4wine
 		
 		
 
@@ -151,7 +151,10 @@ sudo dpkg -i ‘/tmp/tmp/download?plat=lnx.x86_64’
 git config --global user.email "sheldon.anitta@gmail.com"
 git config --global user.name "ag-sd"
 
-#Mount the nas
+#Install Spotify
+snap install spotify
+
+#Mount the nas Requires user entry
     #Backup the fstabs file
     cp /etc/fstab /etc/fstab_backup
 
