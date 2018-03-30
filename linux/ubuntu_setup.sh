@@ -169,6 +169,22 @@ snap install spotify
     read password
     echo -e "$share\t$mt_pt\tcifs\tusername=$username,password=$password,iocharset=utf8,file_mode=0777,dir_mode=0777,vers=1.0\t0\t0" >> /etc/fstab
 
+#Powershell on Linux
+# Import the public repository GPG keys
+curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+
+# Register the Microsoft Ubuntu repository
+curl https://packages.microsoft.com/config/ubuntu/17.04/prod.list | sudo tee /etc/apt/sources.list.d/microsoft.list
+
+# Update the list of products
+sudo apt update
+
+# Install PowerShell
+sudo apt install powershell
+
+# Start PowerShell
+pwsh
+
 # requires clicks
 sudo apt-get install -y --dry-run ubuntu-restricted-extras
 
