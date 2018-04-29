@@ -20,12 +20,24 @@ rm -rf ~/Pictures ~/Public ~/Templates ~/Videos
 
 #http://blog.self.li/post/74294988486/creating-a-post-installation-script-for-ubuntu
 
+
+###########################
+###   Git and Intellij  ###
+###########################
+sudo apt-get install git
+git config --global user.name "SD"
+git config --global user.email <email id>
+git config --list
+read -r -p "Press any key to continue..." response
+
+sudo snap install pycharm-community --classic
+
 ###########################
 ##### REMOVE PROGRAMS #####
 ###########################
 
 echo "Deleting programs now ......................"
-sleep 2
+read -r -p "Press any key to continue..." response
 programs_to_rm=(
 		'Application Finder' 
 		'Notes' 
@@ -40,6 +52,7 @@ programs_to_rm=(
 		'Character Map'
 		'Task Manager'
 		'Dictionary'
+		'Atril Document Viewer'
 )
 
 results=()
@@ -66,7 +79,7 @@ dpkg-query -W --showformat '${Section}\t${Package}\n' | grep ^games | awk '{ pri
 ########################
 
 echo "Adding programs now ......................"
-sleep 2
+read -r -p "Press any key to continue..." response
 #Add repositories
 results=()
 repositories=(
@@ -116,9 +129,12 @@ sudo apt-key adv --keyserver pgp.mit.edu --recv-keys 5044912E
 ##TODO Make this rerunnable
 #sudo apt-get install variety vlc synaptic pinta linux-headers-generic \
 #		p7zip p7zip-full p7zip-rar redshift redshift-gtk gdebi arc-theme xfce4-mount-plugin \
-#		libappindicator1 libindicator7 clementine git gnome-disk-utility cifs-utils wine q4wine
-		
-		
+#		libappindicator1 libindicator7 clementine git gnome-disk-utility cifs-utils wine-stable q4wine \
+#       compizconfig-settings-manager compiz-plugins-extra
+
+sudo apt-get install libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
+        gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc \
+        gstreamer1.0-tools
 
 
 ##Stacer
@@ -145,11 +161,7 @@ sudo dpkg -i /tmp/google-chrome-stable_current_amd64.deb
 
 #Dropbox
 wget "http://www.dropbox.com/download?plat=lnx.x86_64"  -P /tmp/
-sudo dpkg -i ‘/tmp/tmp/download?plat=lnx.x86_64’
-
-#Git Config
-git config --global user.email "sheldon.anitta@gmail.com"
-git config --global user.name "ag-sd"
+sudo dpkg -i '/tmp/download?plat=lnx.x86_64'
 
 #Install Spotify
 snap install spotify
