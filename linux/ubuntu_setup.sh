@@ -95,6 +95,7 @@ repositories=(
 	#'chrome'	'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main'
 	'ubuntu-make'	'ppa:ubuntu-desktop/ubuntu-make'
 	'stacer'        'ppa:oguzhaninan/stacer'
+	'Xfce goodies'  'ppa:xubuntu-dev/extras'
 )
 
 for (( i=0; i<${#repositories[@]} ; i+=2 )) ; do
@@ -137,7 +138,7 @@ sudo apt-key adv --keyserver pgp.mit.edu --recv-keys 5044912E
 
 sudo apt-get install libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
         gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc \
-        gstreamer1.0-tools stacer
+        gstreamer1.0-tools stacer tumbler-plugins-extra ffmpegthumbnailer
 
 
 ##Stacer
