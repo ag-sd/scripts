@@ -196,7 +196,7 @@ curl https://packages.microsoft.com/config/ubuntu/17.04/prod.list | sudo tee /et
 sudo apt update
 
 # Install PowerShell
-sudo apt install powershell
+sudo snap install powershell --classic
 
 # Start PowerShell
 pwsh
