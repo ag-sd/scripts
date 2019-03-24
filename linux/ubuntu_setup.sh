@@ -1,22 +1,28 @@
 #!/bin/bash
 
 #TODO
-#Stacer, Dropbox, Git, vscode
+#Git, vscode
 #Make install rerunnable
 
 ###########################
 #####   HOUSEKEEPING  #####
 ###########################
 rm -rf ~/Downloads
-ln -s /media/sheldon/Downloads/ ~/Downloads
+ln -s <MOUNT LOCATION>/Downloads/Downloads ~/Downloads
 
 rm -rf ~/Documents
-ln -s /media/sheldon/Documents/ ~/Documents
+ln -s <MOUNT LOCATION>/Documents/ ~/Documents
 
 rm -rf ~/Music
-ln -s /media/sheldon/Music/ ~/Music
+ln -s <MOUNT LOCATION>/Music/ ~/Music
 
-rm -rf ~/Pictures ~/Public ~/Templates ~/Videos
+rm -rf ~/Pictures
+ln -s <MOUNT LOCATION>/Documents/Pictures ~/Pictures
+
+rm -rf ~/Videos
+ln -s <MOUNT LOCATION>/Documents/Videos ~/Videos
+
+rm -rf ~/Public ~/Templates 
 
 #http://blog.self.li/post/74294988486/creating-a-post-installation-script-for-ubuntu
 
@@ -83,19 +89,11 @@ read -r -p "Press any key to continue..." response
 #Add repositories
 results=()
 repositories=(
-	#Variety
-	#'peterlevi'	'ppa:peterlevi/ppa'
-	#Pinta	
-	#'pinta'		'ppa:pinta-maintainers/pinta-stable'
-	#Clementine			
-	'clementine'	'ppa:me-davidsansome/clementine'			
-	#Dropbox				
-	#'dropbox'	'deb http://linux.dropbox.com/ubuntu $(lsb_release -sc) main'
-	#Chrome
-	#'chrome'	'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main'
-	'ubuntu-make'	'ppa:ubuntu-desktop/ubuntu-make'
-	'stacer'        'ppa:oguzhaninan/stacer'
-	'Xfce goodies'  'ppa:xubuntu-dev/extras'
+	'clementine'	    'ppa:me-davidsansome/clementine'
+	'ubuntu-make'	    'ppa:ubuntu-desktop/ubuntu-make'
+	'Xfce goodies'      'ppa:xubuntu-dev/extras'
+	'RClone Browser'    'ppa:mmozeiko/rclone-browser'
+	'Q4Wine'            'ppa:tehnick/q4wine'
 )
 
 for (( i=0; i<${#repositories[@]} ; i+=2 )) ; do
@@ -111,23 +109,16 @@ for (( i=0; i<${#repositories[@]} ; i+=2 )) ; do
 done
 
 #Additional configuration for chrome
-wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+#wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
 #Additional configuration for Dropbox
-sudo apt-key adv --keyserver pgp.mit.edu --recv-keys 5044912E
+#sudo apt-key adv --keyserver pgp.mit.edu --recv-keys 5044912E
 
 # basic update
-#apt-get -y --force-yes update
-
-#Install Chromium
-
-#Install VLC
-
-#Install Variety
+apt-get -y --force-yes update
 
 #Install VS-Code
 #umake ide visual-studio-code
 
-#sudo apt-get update
 
 
 ##TODO Make this rerunnable
@@ -138,52 +129,35 @@ sudo apt-key adv --keyserver pgp.mit.edu --recv-keys 5044912E
 
 sudo apt-get install libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
         gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc \
-        gstreamer1.0-tools stacer tumbler-plugins-extra ffmpegthumbnailer
+        gstreamer1.0-tools tumbler-plugins-extra ffmpegthumbnailer samba samba-common-bin \
+        system-config-samba thunar chromium-browser rclone-browser scite meld wine q4wine puddletag \
+        gnome-disk-utility
 
-
-##Stacer
-#stacer:i386 depends on git.
-# stacer:i386 depends on libc6.
-# stacer:i386 depends on libcap2.
-# stacer:i386 depends on libgtk2.0-0.
-# stacer:i386 depends on libudev0 | libudev1.
-# stacer:i386 depends on libgcrypt11 | libgcrypt20.
-#stacer:i386 depends on libnotify4.
-# stacer:i386 depends on libnss3.
-#stacer:i386 depends on libxtst6.
-# stacer:i386 depends on python.
-#wget https://github.com/oguzhaninan/Stacer/releases/download/v1.0.4/Stacer_1.0.4_i386.deb -P /tmp/
-#sudo dpkg -i /tmp/Stacer_1.0.4_i386.deb
-
-#Add to FS Tabs
-#sudo mount -a
-
-
-#Chrome
-wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -P /tmp/
-sudo dpkg -i /tmp/google-chrome-stable_current_amd64.deb
+# RClone
+curl https://rclone.org/install.sh | sudo bash
 
 #Dropbox
-wget "http://www.dropbox.com/download?plat=lnx.x86_64"  -P /tmp/
-sudo dpkg -i '/tmp/download?plat=lnx.x86_64'
+#wget "http://www.dropbox.com/download?plat=lnx.x86_64"  -P /tmp/
+#sudo dpkg -i '/tmp/download?plat=lnx.x86_64'
 
-#Install Spotify
-snap install spotify
+#Bleachbit
+wget https://download.bleachbit.org/bleachbit_2.2_all_ubuntu1810.deb -P /tmp/
+sudo gdebi /tmp/bleachbit_2.2_all_ubuntu1810.deb
 
-#Mount the nas Requires user entry
-    #Backup the fstabs file
-    cp /etc/fstab /etc/fstab_backup
-
-    #Add New entry
-    echo Enter Share name:
-    read share
-    echo Enter mount point:
-    read mt_pt
-    echo Enter your NAS username:
-    read username
-    echo Enter your NAS password:
-    read password
-    echo -e "$share\t$mt_pt\tcifs\tusername=$username,password=$password,iocharset=utf8,file_mode=0777,dir_mode=0777,vers=1.0\t0\t0" >> /etc/fstab
+##Mount the nas Requires user entry
+#    #Backup the fstabs file
+#    cp /etc/fstab /etc/fstab_backup
+#
+#    #Add New entry
+#    echo Enter Share name:
+#    read share
+#    echo Enter mount point:
+#    read mt_pt
+#    echo Enter your NAS username:
+#    read username
+#    echo Enter your NAS password:
+#    read password
+#    echo -e "$share\t$mt_pt\tcifs\tusername=$username,password=$password,iocharset=utf8,file_mode=0777,dir_mode=0777,vers=1.0\t0\t0" >> /etc/fstab
 
 #Powershell on Linux
 # Import the public repository GPG keys
@@ -197,6 +171,12 @@ sudo snap install powershell --classic
 
 # Start PowerShell
 pwsh
+
+# Citrix installation
+# https://askubuntu.com/questions/901448/citrix-receiver-error-1000119
+cd /opt/Citrix/ICAClient/keystore/
+rm -rf cacerts
+ln -s /etc/ssl/certs cacerts
 
 # requires clicks
 sudo apt-get install -y --dry-run ubuntu-restricted-extras
