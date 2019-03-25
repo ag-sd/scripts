@@ -119,19 +119,53 @@ apt-get -y --force-yes update
 #Install VS-Code
 #umake ide visual-studio-code
 
+programs=(
+    'libgstreamer*'
+    'gstreamer*-plugins-base'
+    'gstreamer*-plugins-good'
+    'gstreamer*-plugins-bad'
+    'gstreamer*-plugins-ugly'
+    'gstreamer*-libav'
+    'gstreamer*-doc'
+    'gstreamer*-tools'
+    'tumbler-plugins-extra'
+    'ffmpegthumbnailer'
+    'samba'
+    'samba-common-bin'
+    'system-config-samba'
+    'thunar'
+    'chromium-browser'
+    'rclone-browser'
+    'scite'
+    'meld'
+    #'wine'
+    'q4wine'
+    'puddletag'
+    'gnome-disk-utility'
+    'foo'
+    'bar'
+)
 
+install=()
 
-##TODO Make this rerunnable
-#sudo apt-get install variety vlc synaptic pinta linux-headers-generic \
-#		p7zip p7zip-full p7zip-rar redshift redshift-gtk gdebi arc-theme xfce4-mount-plugin \
-#		libappindicator1 libindicator7 clementine git gnome-disk-utility cifs-utils wine-stable q4wine \
-#       compizconfig-settings-manager compiz-plugins-extra
+for (( i=0; i<${#programs[@]} ; i+=1 )) ; do
+    printf "Searching for installed program ${programs[i]}\n"
+    result="$(apt-cache policy "${programs[i]}" | grep Installed | grep -v none)"
+    if [[ ${result} > 0 ]]; then
+		printf "\t\tApp ${programs[i]} was found in the system as $result\n"
+	else
+		printf "\t\tApp ${programs[i]} was NOT found in the system and will be installed.\n"
+		#sudo apt-get install "${programs[i]}"
+		install+=(${programs[i]})
+	fi
+done
 
-sudo apt-get install libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
-        gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc \
-        gstreamer1.0-tools tumbler-plugins-extra ffmpegthumbnailer samba samba-common-bin \
-        system-config-samba thunar chromium-browser rclone-browser scite meld wine q4wine puddletag \
-        gnome-disk-utility
+printf "**********************The following applications will be installed**********************\n\n"
+printf '%s\n' "${install[@]}"
+read -r -p "Press any key to continue..." response
+
+sudo apt-get update
+sudo apt-get install -y "${install[@]}"
 
 # RClone
 curl https://rclone.org/install.sh | sudo bash
