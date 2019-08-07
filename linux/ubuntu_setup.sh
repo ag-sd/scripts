@@ -142,8 +142,7 @@ programs=(
     'q4wine'
     'puddletag'
     'gnome-disk-utility'
-    'foo'
-    'bar'
+    'ristretto'
 )
 
 install=()
