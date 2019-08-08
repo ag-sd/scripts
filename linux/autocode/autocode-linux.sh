@@ -13,15 +13,13 @@ if [ -z "$2" ]
     echo "Please provide the minimum number of hours you wish encoding to occur"
     exit 1
 fi
-
 if ! [ -x "$(command -v HandBrakeCLI)" ]; then
   echo 'Error: HandBrakeCLI is not installed.' >&2
   exit 1
 fi
-
 MAX_HOURS=$2
-CURRENT_FILE=""
 
+CURRENT_FILE=""
 Get-Next-File () {
   IFS=$'\n'
   for f in $(ls -p --sort=size "$WORK_DIR/work" | grep -v /);
@@ -46,10 +44,7 @@ Encode-File() {
   echo "$(date)|$hrs|$file" >> "$WORK_DIR/encode-history.log"
   # Create output file
   output_file="$WORK_DIR/work/encoded/$file"
-
-  # Proclaim intent
   echo "[$(date)] : Encoding $file to $output_file"
-
   #Encode
   cmd="HandBrakeCLI -i \"$WORK_DIR/work/$file\" -t 1 --angle 1 -c 1 -o \"$output_file\"  -f mp4  --detelecine -w 640 --crop 0:0:0:0 --loose-anamorphic  --modulus 2 -e x264 -q 22 -r 30 --pfr -a none  --audio-fallback ac3 --markers="/tmp/chapter.csv" --encoder-preset=veryslow  --encoder-tune="film"  --encoder-level="3.1"  --encoder-profile=high  --verbose=1"
   echo "Command to execute is $cmd"
@@ -58,15 +53,29 @@ Encode-File() {
   if [ $error_code -eq 0 ]
   then
     echo "[$(date)] : File encoded successfully!"
+    mv "$WORK_DIR/work/$file" "$WORK_DIR/work/complete/$file"
+    echo "[$(date)] : File moved to $WORK_DIR/work/complete/"
   else
     dt=$(date)
-    echo "[$dt] : Unable to encode file!! " >&2
+    echo "[$dt] : Unable to encode file!! An error-code has been logged" >&2
     echo "$dt|$error_code|$file" >> "$WORK_DIR/encode-errors.log"
   fi
 }
 
+Determine-Shutdown() {
+  eval "./shutdown_test.py"
+  error_code=$?
+  if [ $error_code -eq 0 ]
+  then
+    echo "[$(date)] : Proceeding with System Shutdown"
+    shutdown -h now
+  else
+    echo "[$(date)] : Shutdown has been canceled"
+  fi
+}
 
 echo "Working in $WORK_DIR"
+echo "$(date)|Autocode Is Starting" >> "$WORK_DIR/encode-activity.log"
 #Start a timer
 start=$SECONDS
 echo "[$(date)] : Started at $start. Will run for the next $MAX_HOURS hours"
@@ -87,5 +96,6 @@ do
       echo "[$(date)] : Encode complete. Autocode has been running for $hours hours"
   fi
 done
-
+echo "$(date)|Autocode Is Exiting" >> "$WORK_DIR/encode-activity.log"
+Determine-Shutdown
 
