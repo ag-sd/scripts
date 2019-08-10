@@ -19,6 +19,11 @@ if ! [ -x "$(command -v HandBrakeCLI)" ]; then
 fi
 MAX_HOURS=$2
 
+PreProcess() {
+  echo "[$(date)] : Moving files less than 300MB to encoded"
+  find "$WORK_DIR/work" -maxdepth 1 -type f -size -300M -exec mv "{}" "$WORK_DIR/work/encoded/" \;
+}
+
 CURRENT_FILE=""
 Get-Next-File () {
   IFS=$'\n'
@@ -70,7 +75,7 @@ Determine-Shutdown() {
     echo "[$(date)] : Proceeding with System Shutdown"
     shutdown -h now
   else
-    echo "[$(date)] : Shutdown has been canceled"
+    echo "[$(date)] : Shutdown has been canceled. Autocode will exit."
   fi
 }
 
@@ -79,6 +84,8 @@ echo "$(date)|Autocode Is Starting" >> "$WORK_DIR/encode-activity.log"
 #Start a timer
 start=$SECONDS
 echo "[$(date)] : Started at $start. Will run for the next $MAX_HOURS hours"
+# Do any necessary pre-processing
+PreProcess
 hours=0
 while [ $hours -lt "$MAX_HOURS" ]
 do
