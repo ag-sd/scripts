@@ -13,11 +13,12 @@ if [ -z "$2" ]
     echo "Please provide the minimum number of hours you wish encoding to occur"
     exit 1
 fi
+MAX_HOURS=$2
+
 if ! [ -x "$(command -v HandBrakeCLI)" ]; then
   echo 'Error: HandBrakeCLI is not installed.' >&2
   exit 1
 fi
-MAX_HOURS=$2
 
 PreProcess() {
   echo "[$(date)] : Moving files less than 300MB to encoded"
@@ -68,7 +69,7 @@ Encode-File() {
 }
 
 Determine-Shutdown() {
-  eval "./shutdown_test.py"
+  eval "shutdown_test.py"
   error_code=$?
   if [ $error_code -eq 0 ]
   then
@@ -83,7 +84,7 @@ echo "Working in $WORK_DIR"
 echo "$(date)|Autocode Is Starting" >> "$WORK_DIR/encode-activity.log"
 #Start a timer
 start=$SECONDS
-echo "[$(date)] : Started at $start. Will run for the next $MAX_HOURS hours"
+echo "[$(date)] : Will run for the next $MAX_HOURS hours"
 # Do any necessary pre-processing
 PreProcess
 hours=0
@@ -97,10 +98,9 @@ do
       echo "[$(date)] : Nothing more to process!!"
       hours=$MAX_HOURS
     else
-      echo "[$(date)] : Start encoding $file"
       Encode-File "$file" "$hours"
       hours=$(((SECONDS-start)/3600))
-      echo "[$(date)] : Encode complete. Autocode has been running for $hours hours"
+      echo "[$(date)] : Autocode has been running for $hours hours"
   fi
 done
 echo "$(date)|Autocode Is Exiting" >> "$WORK_DIR/encode-activity.log"
