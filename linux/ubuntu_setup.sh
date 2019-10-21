@@ -1,9 +1,5 @@
 #!/bin/bash
 
-#TODO
-#Git, vscode
-#Make install rerunnable
-
 ###########################
 #####   HOUSEKEEPING  #####
 ###########################
@@ -59,9 +55,14 @@ programs_to_rm=(
 		'Task Manager'
 		'Dictionary'
 		'Atril Document Viewer'
+    'Tomboy Notes'
+    'GNU Image Manipulation Program'
+    'HexChat'
+    'Rhythmbox'
+    'Screen Reader'
 )
 
-results=()
+results=('gnome-orca')
 for prog in "${programs_to_rm[@]}"; do
     	echo "Looking For		$prog"
     	result="$(grep -lR "$prog" /usr/share/applications/*.desktop | tail -n1)"
@@ -78,6 +79,15 @@ done
 echo "*************** Attempting to remove ALL GAMES ***************"
 dpkg-query -W --showformat '${Section}\t${Package}\n' | grep ^games | awk '{ print $2 }' | xargs sudo apt-get purge -y
 
+########################
+#### INTERNET SPEED ####
+########################
+lsmod | grep iwlwifi
+# Does the terminal output contain the word iwlwifi (in red letters)? If so, proceed with the next step.
+echo "options iwlwifi 11n_disable=8" | sudo tee /etc/modprobe.d/iwlwifi11n.conf
+
+# To undo
+# sudo rm -v /etc/modprobe.d/iwlwifi11n.conf
 
 
 ########################
@@ -91,9 +101,8 @@ results=()
 repositories=(
 	'clementine'	    'ppa:me-davidsansome/clementine'
 	'ubuntu-make'	    'ppa:ubuntu-desktop/ubuntu-make'
-	'Xfce goodies'      'ppa:xubuntu-dev/extras'
-	'RClone Browser'    'ppa:mmozeiko/rclone-browser'
-	'Q4Wine'            'ppa:tehnick/q4wine'
+	'Xfce goodies'    'ppa:xubuntu-dev/extras'
+	'Q4Wine'          'ppa:tehnick/q4wine'
 )
 
 for (( i=0; i<${#repositories[@]} ; i+=2 )) ; do
@@ -108,16 +117,8 @@ for (( i=0; i<${#repositories[@]} ; i+=2 )) ; do
 	echo " "
 done
 
-#Additional configuration for chrome
-#wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-#Additional configuration for Dropbox
-#sudo apt-key adv --keyserver pgp.mit.edu --recv-keys 5044912E
-
 # basic update
 apt-get -y --force-yes update
-
-#Install VS-Code
-#umake ide visual-studio-code
 
 programs=(
     'libgstreamer*'
@@ -135,14 +136,14 @@ programs=(
     'system-config-samba'
     'thunar'
     'chromium-browser'
-    'rclone-browser'
     'scite'
     'meld'
-    #'wine'
     'q4wine'
     'puddletag'
     'gnome-disk-utility'
     'ristretto'
+    'audacious'
+    'clementine'
 )
 
 install=()
@@ -169,13 +170,11 @@ sudo apt-get install -y "${install[@]}"
 # RClone
 curl https://rclone.org/install.sh | sudo bash
 
-#Dropbox
-#wget "http://www.dropbox.com/download?plat=lnx.x86_64"  -P /tmp/
-#sudo dpkg -i '/tmp/download?plat=lnx.x86_64'
-
-#Bleachbit
-wget https://download.bleachbit.org/bleachbit_2.2_all_ubuntu1810.deb -P /tmp/
-sudo gdebi /tmp/bleachbit_2.2_all_ubuntu1810.deb
+#Improve font support
+wget http://ftp.us.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscorefonts-installer_3.7_all.deb -P ~/Downloads
+sudo apt install ~/Downloads/ttf-mscorefonts-installer_3.7_all.deb
+sudo dpkg-reconfigure fontconfig
+sudo apt-get install fonts-crosextra-carlito fonts-crosextra-caladea
 
 ##Mount the nas Requires user entry
 #    #Backup the fstabs file
@@ -190,20 +189,7 @@ sudo gdebi /tmp/bleachbit_2.2_all_ubuntu1810.deb
 #    read username
 #    echo Enter your NAS password:
 #    read password
-#    echo -e "$share\t$mt_pt\tcifs\tusername=$username,password=$password,iocharset=utf8,file_mode=0777,dir_mode=0777,vers=1.0\t0\t0" >> /etc/fstab
-
-#Powershell on Linux
-# Import the public repository GPG keys
-curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
-
-# Register the Microsoft Ubuntu repository
-curl -o /etc/apt/sources.list.d/microsoft.list https://packages.microsoft.com/config/ubuntu/18.04/prod.list
-
-# Install PowerShell
-sudo snap install powershell --classic
-
-# Start PowerShell
-pwsh
+#    echo -e #"$share\t$mt_pt\tcifs\tusername=$username,password=$password,iocharset=utf8,file_mode=0777,dir_mode=0777,vers=1.0\t0\t0" >> /etc/fstab
 
 # Citrix installation
 # https://askubuntu.com/questions/901448/citrix-receiver-error-1000119
@@ -213,7 +199,6 @@ ln -s /etc/ssl/certs cacerts
 
 # requires clicks
 sudo apt-get install -y --dry-run ubuntu-restricted-extras
-
 
 #Update the System
 sudo apt autoremove

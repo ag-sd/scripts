@@ -69,7 +69,7 @@ Encode-File() {
 }
 
 Determine-Shutdown() {
-  eval "shutdown_test.py"
+  eval "$(dirname "$0")/shutdown_test.py"
   error_code=$?
   if [ $error_code -eq 0 ]
   then
