@@ -46,8 +46,6 @@ Get-Next-File () {
 Encode-File() {
   file=$1
   hrs=$2
-  # Add the file to the execution log
-  echo "$(date)|$hrs|$file" >> "$WORK_DIR/encode-history.log"
   # Create output file
   output_file="$WORK_DIR/work/encoded/$file"
   echo "[$(date)] : Encoding $file to $output_file"
@@ -58,6 +56,8 @@ Encode-File() {
   error_code=$?
   if [ $error_code -eq 0 ]
   then
+  	# Add the file to the execution log history
+  	echo "$(date)|$hrs|$file" >> "$WORK_DIR/encode-history.log"
     echo "[$(date)] : File encoded successfully!"
     mv "$WORK_DIR/work/$file" "$WORK_DIR/work/complete/$file"
     echo "[$(date)] : File moved to $WORK_DIR/work/complete/"
@@ -69,14 +69,27 @@ Encode-File() {
 }
 
 Determine-Shutdown() {
-  eval "$(dirname "$0")/shutdown_test.py"
-  error_code=$?
-  if [ $error_code -eq 0 ]
-  then
-    echo "[$(date)] : Proceeding with System Shutdown"
-    shutdown -h now
+  SHUTDOWN_TIMEOUT=30
+  # Use Zenity if available
+  if ! [ -x "$(command -v zenity)" ]; then
+    eval "$(dirname "$0")/shutdown_test.py $SHUTDOWN_TIMEOUT"
+    error_code=$?
+    if [ $error_code -eq 0 ]
+    then
+      echo "[$(date)] : Proceeding with System Shutdown"
+      #shutdown -h now
+    else
+      echo "[$(date)] : Shutdown has been canceled. Autocode will exit."
+    fi
   else
-    echo "[$(date)] : Shutdown has been canceled. Autocode will exit."
+    if zenity --question --timeout $SHUTDOWN_TIMEOUT --default-cancel \
+      --width=550 --text="Autocode has completed execution. Do you want to shutdown the computer now?\n\nIf no option is selected Autocode will automatically shutdown the system in $SHUTDOWN_TIMEOUT seconds"; then
+      echo "[$(date)] : Proceeding with System Shutdown"
+      #shutdown -h now
+    else
+      echo "[$(date)] : Shutdown has been canceled. Autocode will exit."
+      zenity --info --text="Shutdown canceled\!"
+    fi
   fi
 }
 
