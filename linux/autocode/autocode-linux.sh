@@ -77,7 +77,7 @@ Determine-Shutdown() {
     if [ $error_code -eq 0 ]
     then
       echo "[$(date)] : Proceeding with System Shutdown"
-      #shutdown -h now
+      shutdown -h now
     else
       echo "[$(date)] : Shutdown has been canceled. Autocode will exit."
     fi
@@ -85,7 +85,7 @@ Determine-Shutdown() {
     if zenity --question --timeout $SHUTDOWN_TIMEOUT --default-cancel \
       --width=550 --text="Autocode has completed execution. Do you want to shutdown the computer now?\n\nIf no option is selected Autocode will automatically shutdown the system in $SHUTDOWN_TIMEOUT seconds"; then
       echo "[$(date)] : Proceeding with System Shutdown"
-      #shutdown -h now
+      shutdown -h now
     else
       echo "[$(date)] : Shutdown has been canceled. Autocode will exit."
       zenity --info --text="Shutdown canceled\!"
