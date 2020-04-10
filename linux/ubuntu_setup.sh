@@ -103,6 +103,8 @@ repositories=(
 	'ubuntu-make'	    'ppa:ubuntu-desktop/ubuntu-make'
 	'Xfce goodies'    'ppa:xubuntu-dev/extras'
 	'Q4Wine'          'ppa:tehnick/q4wine'
+	'MusicBrainz'     'ppa:musicbrainz-developers/stable'
+	'Pinta'           'ppa:pinta-maintainers/pinta-stable'
 )
 
 for (( i=0; i<${#repositories[@]} ; i+=2 )) ; do
@@ -139,11 +141,12 @@ programs=(
     'scite'
     'meld'
     'q4wine'
-    'puddletag'
     'gnome-disk-utility'
     'ristretto'
     'audacious'
-    'clementine'
+    'picard'
+    'pencil'
+    'pinta'
 )
 
 install=()
