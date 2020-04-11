@@ -20,6 +20,14 @@ if ! [ -x "$(command -v HandBrakeCLI)" ]; then
   exit 1
 fi
 
+SETTINGS="$WORK_DIR/settings"
+if test -f "$SETTINGS"; then
+    echo "Will read settings from $SETTINGS"
+else
+    echo "$SETTINGS does not exist. Creating an empty settings file now"
+    touch "$SETTINGS"
+fi
+
 PreProcess() {
   echo "[$(date)] : Moving files less than 300MB to encoded"
   find "$WORK_DIR/work" -maxdepth 1 -type f -size -300M -exec mv "{}" "$WORK_DIR/work/encoded/" \;
@@ -52,7 +60,16 @@ Encode-File() {
   #Encode
   cmd="HandBrakeCLI -i \"$WORK_DIR/work/$file\" -t 1 --angle 1 -c 1 -o \"$output_file\"  -f mp4  --detelecine -w 640 --crop 0:0:0:0 --loose-anamorphic  --modulus 2 -e x264 -q 22 -r 30 --pfr -a none  --audio-fallback ac3 --markers="/tmp/chapter.csv" --encoder-preset=veryslow  --encoder-tune="film"  --encoder-level="3.1"  --encoder-profile=high  --verbose=1"
   echo "Command to execute is $cmd"
-  eval "$cmd"
+  # Niceness to be turned on dynamically from settings
+  # shellcheck disable=SC1090
+  source "$SETTINGS"
+  if [ "$NICE" == true ]; then
+    echo "[$(date)] : I will be nice. Encoding will be done with lesser system resources"
+    eval "nice $cmd"
+  else
+    echo "[$(date)] : I will be greedy. Encoding will be done with maximum system resources"
+    eval "$cmd"
+  fi
   error_code=$?
   if [ $error_code -eq 0 ]
   then
