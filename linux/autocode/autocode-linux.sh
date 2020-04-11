@@ -22,10 +22,13 @@ fi
 
 SETTINGS="$WORK_DIR/settings"
 if test -f "$SETTINGS"; then
-    echo "Will read settings from $SETTINGS"
+    echo "[$(date)] : Will read settings from $SETTINGS"
+    # Update MAX_HOURS in the file
+    # FIXME Bug. If the MAX_HOURS value has been removed from the file. It will never be re-written!
+    sed -i "s/^MAX_HOURS=.*/MAX_HOURS=$MAX_HOURS/" settings
 else
-    echo "$SETTINGS does not exist. Creating an empty settings file now"
-    touch "$SETTINGS"
+    echo "[$(date)] : $SETTINGS does not exist. Creating an empty settings file now"
+    echo -e "# Dynamic settings. These will be overwritten at each Autocode startup\nMAX_HOURS=$MAX_HOURS" > "$SETTINGS"
 fi
 
 PreProcess() {
@@ -131,6 +134,9 @@ do
       Encode-File "$file" "$hours"
       hours=$(((SECONDS-start)/3600))
       echo "[$(date)] : Autocode has been running for $hours hours"
+      # Load $MAX_HOURS from settings to dynamically increase or shorten runtime
+      # shellcheck disable=SC1090
+      source "$SETTINGS"
   fi
 done
 echo "$(date)|Autocode Is Exiting" >> "$WORK_DIR/encode-activity.log"
