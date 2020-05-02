@@ -1,0 +1,70 @@
+background no
+use_xft yes
+font Terminus:size=8
+xftalpha 0.5
+update_interval 5
+total_run_times 0
+own_window yes
+own_window_type normal
+own_window_transparent yes
+own_window_argb_visual yes
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+double_buffer yes
+#default_bar_size 0 6
+ 
+maximum_width 300
+draw_shades no
+draw_outline no
+draw_borders no
+draw_graph_borders no
+default_color white
+default_shade_color black
+default_outline_color grey
+alignment top_right
+gap_x 25
+gap_y 25
+no_buffers yes
+uppercase no
+cpu_avg_samples 2
+net_avg_samples 2
+override_utf8_locale yes
+use_spacer no
+ 
+own_window_argb_value 10
+minimum_size 300
+
+color0 dodgerblue3
+color1 EC0100
+color2 E9E101
+color3 18FF00
+color4 66aaff
+
+TEXT
+${execpi 28800 python3 scripts/BBC_weather_rss.py}
+
+${font Open Sans:Bold:size=10}${color0}System ${color EC0100}${hr 2}
+${alignc -0}${font Open Sans:size=15}${color0} sheldon@sheldon-desktop $font$color
+
+# CPU
+${font Open Sans:Bold:size=10}${color0}CPU ${color EC0100}${hr 2}
+${color2}$cpu% $freq(MHz) $alignr $color${font}Uptime:$uptime_short
+${color2}${cpubar 8}
+
+# MEMORY
+${font Open Sans:Bold:size=10}${color0}RAM ${color EC0100}${hr 2}
+${color2}$mem ($memperc% used)
+${membar 8} 
+
+# NETWORK
+${voffset -5}${font Open Sans:Bold:size=10}${color0}NET ${color EC0100}${hr 2}$color
+#$color${font Open Sans:bold:size=8.5}External IP ${font}${alignr}${execi 60 curl http://google.com --connect-timeout 2 | grep -o "[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*"}$font
+${font Open Sans:bold:size=8.5}WiFi $font${wireless_bitrate wlp2s0} $alignr ${addr wlp2s0}
+$alignc${wireless_essid wlp2s0}
+↑ ${upspeedf wlp2s0} kb/s $alignr ${totalup wlp2s0}
+${voffset -14}$alignc${upspeedgraph wlp2s0 10,120 ff0000 0000ff}
+↓ ${downspeedf wlp2s0} kb/s $alignr ${totaldown wlp2s0}
+${voffset -14}$alignc${downspeedgraph wlp2s0 10,120 ff0000 0000ff}
+
+# HDD
+${font Open Sans:Bold:size=10}${color0}HDD ${color1}${hr 2}$color$font
+${execpi 60 scripts/disk_reader.sh}
