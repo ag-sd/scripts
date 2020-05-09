@@ -2,7 +2,7 @@ background no
 use_xft yes
 font Terminus:size=8
 xftalpha 0.5
-update_interval 5
+update_interval 10
 total_run_times 0
 own_window yes
 own_window_type normal
@@ -42,24 +42,16 @@ color4 66aaff
 TEXT
 ${execpi 28800 python3 scripts/BBC_weather_rss.py}
 
-${font Open Sans:Bold:size=10}${color0}System ${color EC0100}${hr 2}
-${alignc -0}${font Open Sans:size=15}${color0} sheldon@sheldon-desktop $font$color
-
+${font Open Sans:Bold:size=10}${color0}SYS ${color EC0100}${hr 2}
 # CPU
-${font Open Sans:Bold:size=10}${color0}CPU ${color EC0100}${hr 2}
-${color2}$cpu% $freq(MHz) $alignr $color${font}Uptime:$uptime_short
+${font Open Sans:bold:size=9.5}${color2}${execi 28800 echo $DESKTOP_SESSION}${font Open Sans:size=8.5} on ${execi 28800 lsb_release -d | tail -c +14}
+${font Open Sans:bold:size=8.5}${color2}CPU: $font$cpu% $freq(MHz) $alignr ${font}Uptime:$uptime_short
 ${color2}${cpubar 8}
-
 # MEMORY
-${font Open Sans:Bold:size=10}${color0}RAM ${color EC0100}${hr 2}
-${color2}$mem ($memperc% used)
-${membar 8} 
-
+${font Open Sans:bold:size=8.5}RAM: $font$mem ($memperc% used)
+${membar 8}
 # NETWORK
-${voffset -5}${font Open Sans:Bold:size=10}${color0}NET ${color EC0100}${hr 2}$color
-#$color${font Open Sans:bold:size=8.5}External IP ${font}${alignr}${execi 60 curl http://google.com --connect-timeout 2 | grep -o "[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*"}$font
-${font Open Sans:bold:size=8.5}WiFi $font${wireless_bitrate wlp2s0} $alignr ${addr wlp2s0}
-$alignc${wireless_essid wlp2s0}
+${font Open Sans:bold:size=8.5}WiFi: $font${wireless_bitrate wlp2s0} $alignc${wireless_essid wlp2s0} $alignr ${addr wlp2s0}
 ↑ ${upspeedf wlp2s0} kb/s $alignr ${totalup wlp2s0}
 ${voffset -14}$alignc${upspeedgraph wlp2s0 10,120 ff0000 0000ff}
 ↓ ${downspeedf wlp2s0} kb/s $alignr ${totaldown wlp2s0}
@@ -68,3 +60,8 @@ ${voffset -14}$alignc${downspeedgraph wlp2s0 10,120 ff0000 0000ff}
 # HDD
 ${font Open Sans:Bold:size=10}${color0}HDD ${color1}${hr 2}$color$font
 ${execpi 60 scripts/disk_reader.sh}
+
+# WORLD TIME
+${font Open Sans:Bold:size=10}${color0}TIME ${color1}${hr 2}$font${color}
+${execpi 10 scripts/world_time.sh Calcutta Muscat Johannesburg London New_York Los_Angeles Melbourne}
+

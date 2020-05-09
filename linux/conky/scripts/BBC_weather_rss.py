@@ -94,7 +94,7 @@ today = extract_data(bbc_feed.entries[0], "", current=True)
 tomorrow = extract_data(bbc_feed.entries[1], "")
 day_after = extract_data(bbc_feed.entries[2], "")
 
-print("${font Open Sans:Bold:size=10}${color0}" + bbc_feed.feed.title.replace("BBC Weather - ", "") +"${color EC0100}${hr 2}$color")
+print("${font Open Sans:Bold:size=10}${color0}" + bbc_feed.feed.title.replace("BBC Weather - Forecast for", "").strip() +" ${color EC0100}${hr 2}$color")
 print("${font Roboto:size=60}${alignr}" + today['MIN'].split(" ")[0] + "${image " + today['IMG'] + " -p 25,25 -s 80x80}")
 print("${voffset -80}${font Open Sans:size=8.5}Wind${offset 20}" + today['WSP'] + " " + today['WDR'] + "${alignr}${offset -20}Humidity 84%")
 print("${font Open Sans:size=8.5}Sunset${offset 9}" + today['SST'] + "${alignr}Pressure 1022mb")
