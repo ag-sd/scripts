@@ -37,11 +37,15 @@ color0 dodgerblue3
 color1 EC0100
 color2 E9E101
 color3 18FF00
-color4 66aaff
+color4 458eff
+color5 E95950
+color6 cd486b
+color7 125688
 
 TEXT
 ${execpi 28800 python3 scripts/BBC_weather_rss.py}
-
+# AUDACIOUS
+${if_running audacious}${execpi 1 scripts/audacious-info.sh}${endif}
 ${font Open Sans:Bold:size=10}${color0}SYS ${color EC0100}${hr 2}
 # CPU
 ${font Open Sans:bold:size=9.5}${color2}${execi 28800 echo $DESKTOP_SESSION}${font Open Sans:size=8.5} on ${execi 28800 lsb_release -d | tail -c +14}
@@ -59,9 +63,8 @@ ${voffset -14}$alignc${downspeedgraph wlp2s0 10,120 ff0000 0000ff}
 
 # HDD
 ${font Open Sans:Bold:size=10}${color0}HDD ${color1}${hr 2}$color$font
-${execpi 60 scripts/disk_reader.sh}
+${color3}${execpi 60 scripts/disk_reader.sh}
 
-# WORLD TIME
+# TIME
 ${font Open Sans:Bold:size=10}${color0}TIME ${color1}${hr 2}$font${color}
-${execpi 10 scripts/world_time.sh Calcutta Muscat Johannesburg London New_York Los_Angeles Melbourne}
-
+${color4}${execpi 10 scripts/world_time.sh Calcutta Muscat Johannesburg London New_York Los_Angeles Melbourne}
